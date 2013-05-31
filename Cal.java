@@ -17,7 +17,7 @@ class Cal {
     }
 
     Cal(Scanner s) {
-        this.scanner = s;
+        scanner = s;
     }
 
     void expr() {
