@@ -27,6 +27,7 @@ class Scanner {
         look = (look == '+') ? Type.ADD : look;
         look = (look == '-') ? Type.SUB : look;
         look = (look == '=') ? Type.EQ : look;
+        look = (look == '$') ? Type.EOF : look;
         Token tok = new Token(look);
         read();
         return tok;

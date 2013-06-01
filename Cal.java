@@ -60,6 +60,8 @@ class Cal {
             // + num Es [opE] | - num Es [opE]
             expr = opE(expr);
             break;
+        case Type.EOF:
+            break;
         default:
             syntaxError();
         }
@@ -86,6 +88,7 @@ class Cal {
             break;
         case Type.ADD:
         case Type.SUB:
+        case Type.EOF:
             break;
         default:
             syntaxError();
