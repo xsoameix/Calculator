@@ -1,3 +1,7 @@
+package main;
+
+import symbol.*;
+
 class Scanner {
     char look = ' ';
 
@@ -24,11 +28,24 @@ class Scanner {
             return new Num(num);
         }
 
-        look = (look == '+') ? Type.ADD : look;
-        look = (look == '-') ? Type.SUB : look;
-        look = (look == '=') ? Type.EQ : look;
-        look = (look == '$') ? Type.EOF : look;
-        Token tok = new Token(look);
+        Token tok = null;
+        switch(look) {
+        case '+':
+            tok = new Add();
+            break;
+        case '-':
+            tok = new Sub();
+            break;
+        case '=':
+            tok = new Token(Type.EQ);
+            break;
+        case '$':
+            tok = new Token(Type.EOF);
+            break;
+        default:
+            System.out.println("syntax error");
+            System.exit(1);
+        }
         read();
         return tok;
     }

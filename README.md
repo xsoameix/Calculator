@@ -1,11 +1,10 @@
 ### Installation
 
-    mkdir bin
-    javac -d bin *.java
+    javac -d bin main/Cal.java
 
 ### Execute it !
 
-    java -cp bin Cal
+    java -cp bin main/Cal
 
 Type:
 
@@ -17,8 +16,25 @@ and pressing Enter produce:
 
 and type:
 
-    1=
+    2+
 
 and pressing Enter produce:
 
-    cal: 2
+    cal: 3
+
+and type:
+
+    3=
+
+and pressing Enter produce:
+
+    6
+
+and type:
+
+    $
+
+and pressing Enter produce:
+
+    	t1 = 1 + 2
+    	t2 = t1 + 3

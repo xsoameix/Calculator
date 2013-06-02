@@ -1,3 +1,8 @@
+package main;
+
+import symbol.*;
+import inter.*;
+
 // expr -> unary opE
 // unary -> - num | num
 // opE -> + num Es opE |
@@ -6,6 +11,7 @@
 //
 // Es -> = Es | epsilon
 // (Es : expressions)
+
 class Cal {
     private Scanner scanner;
     private Token look;
@@ -13,35 +19,41 @@ class Cal {
     public static void main(String args[]) {
         Scanner s = new Scanner();
         Cal c = new Cal(s);
-        c.expr();
+        Expr e = c.expr();
+
+        // Code generation.
+        Stmt stmt = new Stmt(e);
+        stmt.gen();
     }
 
     Cal(Scanner s) {
         scanner = s;
     }
 
-    void expr() {
+    Expr expr() {
+        Expr expr = null;
         next();
-        switch(look.type) {
+        switch(look.getType()) {
         case Type.SUB:
         case Type.NUM:
             // expr -> [unary] opE
             Expr expr1 = unary();
 
             // expr -> unary [opE]
-            Expr expr = opE(expr1);
+            expr = opE(expr1);
             break;
         default:
             syntaxError();
         }
+        return expr;
     }
 
     Expr opE(Expr expr1) {
         Expr expr = null;
-        switch(look.type) {
+        switch(look.getType()) {
         case Type.ADD:
         case Type.SUB:
-            System.out.println("cal : " + expr1.result);
+            System.out.println("cal : " + expr1.getResult());
 
             // [+] num Es opE | [-] num Es opE
             Token op = look;
@@ -51,7 +63,7 @@ class Cal {
             Expr expr2 = num();
 
             // Build AST node.
-            expr = new Expr(op, expr1, expr2);
+            expr = new ExprArith(op, expr1, expr2);
 
             // + num [Es] opE | - num [Es] opE
             boolean cal = false;
@@ -61,6 +73,7 @@ class Cal {
             expr = opE(expr);
             break;
         case Type.EOF:
+            expr = expr1;
             break;
         default:
             syntaxError();
@@ -69,16 +82,16 @@ class Cal {
     }
 
     Expr Es(Expr expr, boolean cal) {
-        switch(look.type) {
+        switch(look.getType()) {
         case Type.EQ:
             if(cal) {
                 // Build AST node.
-                expr = new Expr(expr.op, expr, expr.expr2);
+                expr = new ExprArith(expr.op, expr, expr.expr2);
             } else {
                 cal = true;
             }
 
-            System.out.println(expr.result);
+            System.out.println(expr.getResult());
 
             // Es -> [=] Es | epsilon
             next();
@@ -98,7 +111,7 @@ class Cal {
 
     Expr unary() {
         Expr expr = null;
-        switch(look.type) {
+        switch(look.getType()) {
         case Type.SUB:
             // unary -> [-] num | num
             next();
@@ -106,7 +119,7 @@ class Cal {
             // unary -> - [num] | num
             expr = num();
 
-            expr.result = -expr.result;
+            expr.setResult(-expr.getResult());
             break;
         case Type.NUM:
             // unary -> - num | [num]
@@ -120,9 +133,9 @@ class Cal {
 
     Expr num() {
         Expr expr = null;
-        switch(look.type) {
+        switch(look.getType()) {
         case Type.NUM:
-            expr = new Expr(look, null, null);
+            expr = new ExprNum(look);
             next();
             break;
         default:
